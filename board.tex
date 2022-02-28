@@ -1,0 +1,19 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage[top=2cm,left=1.5cm,right=1.5cm,bottom=2cm]{geometry}
+\begin{document}
+\noindent
+
+% Draw 3 x 3 board
+\def\size{2cm}
+\begin{center}
+  \begin{tikzpicture}
+    \foreach \i in {0,...,2}{
+      \foreach \j in {0,...,2}{
+        \draw[thick] (\i * \size, \j * \size) rectangle (\i * \size + \size, \j * \size + \size);
+      }
+    }
+  \end{tikzpicture}
+\end{center}
+
+\end{document}
