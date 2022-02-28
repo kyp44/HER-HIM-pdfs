@@ -1,13 +1,21 @@
 \documentclass{article}
 \usepackage{tikz}
+\usepackage{chessfss}
 \usepackage[top=2cm,left=1.5cm,right=1.5cm,bottom=2cm]{geometry}
 \begin{document}
 \noindent
 
 % Draw 3 x 3 board
 \def\size{2cm}
+\setboardfontsize{\size}
 \begin{center}
   \begin{tikzpicture}
+    \newcommand\blacksquare[2]{\draw (#1 * \size  + \size/2, #2 * \size + \size/2) node {\BlackEmptySquare};}
+    \blacksquare{0}{0}
+    \blacksquare{2}{0}
+    \blacksquare{1}{1}
+    \blacksquare{0}{2}
+    \blacksquare{2}{2}
     \foreach \i in {0,...,2}{
       \foreach \j in {0,...,2}{
         \draw[thick] (\i * \size, \j * \size) rectangle (\i * \size + \size, \j * \size + \size);
