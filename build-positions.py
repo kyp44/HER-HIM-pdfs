@@ -6,8 +6,7 @@ import argparse
 import numpy as np
 from Config import Config
 from Games import Games
-# TODO Prob don't need this in the end
-from anytree import RenderTree
+from Board import Player
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Builds LaTeX source file for positions required to build a HER (default) or HIM hexapawns learning system.")
@@ -26,17 +25,25 @@ with open("base.tex", "r") as bfile :
             continue
 
         print(r"\setboardfontsize{" + config.units(config.space_size) + "}")
+
+        # Build game tree
         games = Games(config)
-        print(RenderTree(games.root))
         
-        """
-        board = Board(config)
-        turn = Player.WHITE
-        while True :
-            print(board.draw(turn))
-            moves = board.legal_moves(turn)
-            if board.winner(turn) is not None :
-                break
-            board = board.make_move(moves[-1])
-            turn = -turn
-        """
+        # Now draw all positions
+        player = Player.WHITE if args.him else Player.BLACK
+        def new_line() :
+            #print(r"\newline")
+            print(r"\vspace{" + config.units(config.board_spacing) + "}")
+            print(r"\newline")
+
+        n = 0
+        for turn_num, boards in games.all_player_positions(player).items() :
+            shown_boards = []
+            for board in boards :
+                if board not in shown_boards and board.mirror() not in shown_boards and board.winner() is None :
+                    if n > 0 and n % config.boards_per_row == 0 :
+                        new_line()
+                    print(board.draw())
+                    print(r"\hspace{" + config.units(config.board_spacing) + "}")
+                    shown_boards.append(board)
+                    n += 1
