@@ -71,13 +71,40 @@ class Board :
         Makes a legal move and and returns the new Board.
         Behavior for illegal moves is undefined.
         """
+        # Move the pawn
+        player = move.pawn.player
         def proc_pawn(pawn: Pawn) -> Pawn :
             if pawn == move.pawn :
-                return Pawn(move.pawn.player, move.x, move.y)
+                return Pawn(player, move.x, move.y)
             return replace(pawn)
-        pawns = {pl : list(map(proc_pawn, ps)) for pl, ps in self.pawns.items()}
-        return Board(self.config, pawns=pawns)
 
+        player_pawns = list(map(proc_pawn, self.pawns[player]))
+        opponent_pawns = list(map(lambda p : replace(p), filter(lambda p : p.x != move.x or p.y != move.y, self.pawns[-player])))
+        
+        return Board(self.config, pawns={player : player_pawns, -player : opponent_pawns})
+
+    def winner(self, player: Player) -> Optional[Player] :
+        """
+        Given a player's turn, returns whether the other player
+        won on after their last move.
+        """
+        # The current player has no more moves
+        if len(self.legal_moves(player)) == 0 :
+            return -player
+
+        # Opposite player made it to the third row on the last turn
+        third_row = 2 if -player is Player.WHITE else 0
+        for pawn in self.pawns[-player] :
+            if pawn.y == third_row :
+                return -player
+
+        # Are all the current player's peices captured?
+        if len(self.pawns[player]) == 0 :
+            return -player
+
+        return None
+        
+        
     def draw(self, player: Player) -> str :
         """
         Generates a TikZ picture for the board state
@@ -117,5 +144,3 @@ class Board :
 
         out += r"\end{tikzpicture}"
         return out
-
-        

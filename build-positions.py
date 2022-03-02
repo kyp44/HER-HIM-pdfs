@@ -35,8 +35,8 @@ with open("base.tex", "r") as bfile :
         while True :
             print(board.draw(turn))
             moves = board.legal_moves(turn)
-            if len(moves) == 0 :
+            if board.winner(turn) is not None :
                 break
-            board = board.make_move(moves[0])
+            board = board.make_move(moves[-1])
             turn = -turn
         """
