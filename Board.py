@@ -23,18 +23,17 @@ class Move :
     pawn: Pawn
     x: int
     y: int
-    
+
+@dataclass    
 class Board :
     """
     Represents a single position of the board.
     """
-    def __init__(self, config: Config, pawns: Optional[Dict[Player, List[Pawn]]] = None) :
-        self.config = config
-        if pawns is None :
-            self.pawns = {player : [Pawn(player, x, 0 if player is Player.WHITE else 2) for x in range(3)] for player in Player}
-        else :
-            self.pawns = pawns
-
+    config: Config
+    pawns: List[Pawn] = {player : [Pawn(player, x, 0 if player is Player.WHITE else 2) for x in range(3)] for player in Player}
+    turn: Player = Player.WHITE
+    turn_num: int = 1
+    
     def space(self, x: int, y: int) -> Optional[Pawn] :
         for pawns in self.pawns.values() :
             space_pawns = [p for p in pawns if (p.x, p.y) == (x, y)]
@@ -45,14 +44,14 @@ class Board :
     def valid_position(self, x: int, y: int) -> bool :
         return 0 <= x <= 2 and 0 <= y <= 2
         
-    def legal_moves(self, player: Player) -> List[Move] :
+    def legal_moves(self) -> List[Move] :
         """
         Returns list of legal moves for the given
         player's turn.
         """
-        dy = 1 if player is Player.WHITE else -1
+        dy = 1 if self.turn is Player.WHITE else -1
         moves = []
-        for p in self.pawns[player] :
+        for p in self.pawns[self.turn] :
             # Move forward
             new_pos = (p.x, p.y + dy)
             if self.valid_position(*new_pos) and self.space(*new_pos) is None :
@@ -62,7 +61,7 @@ class Board :
             for dx in (-1, 1) :
                 new_pos = (p.x + dx, p.y + dy)
                 space = self.space(*new_pos)
-                if self.valid_position(*new_pos) and space is not None and space.player is -player :
+                if self.valid_position(*new_pos) and space is not None and space.player is -self.turn :
                     moves.append(Move(p, *new_pos))
         
         return moves
@@ -76,7 +75,7 @@ class Board :
             if pawn == move.pawn :
                 return Pawn(move.pawn.player, move.x, move.y)
             return replace(pawn)
-        pawns ={pl : list(map(proc_pawn, ps)) for pl, ps in self.pawns.items()}
+        pawns = {pl : list(map(proc_pawn, ps)) for pl, ps in self.pawns.items()}
         return Board(self.config, pawns=pawns)
 
     def draw(self, player: Player) -> str :

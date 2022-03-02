@@ -4,8 +4,10 @@ Run with -h for usage information.
 """
 import argparse
 import numpy as np
-from Board import Board, Player
 from Config import Config
+from Games import Games
+# TODO Prob don't need this in the end
+from anytree import RenderTree
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Builds LaTeX source file for positions required to build a HER (default) or HIM hexapawns learning system.")
@@ -24,6 +26,10 @@ with open("base.tex", "r") as bfile :
             continue
 
         print(r"\setboardfontsize{" + config.units(config.space_size) + "}")
+        games = Games(config)
+        print(RenderTree(games.root))
+        
+        """
         board = Board(config)
         turn = Player.WHITE
         while True :
@@ -33,3 +39,4 @@ with open("base.tex", "r") as bfile :
                 break
             board = board.make_move(moves[0])
             turn = -turn
+        """
