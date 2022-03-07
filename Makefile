@@ -18,6 +18,8 @@ help:
 	@echo "all:		Build the manual from the LaTeX source code."
 	@echo "clean:		Remove all of the build files for the PDFs."
 	@echo "board:		Build game board PDF."
+	@echo "her:		Build the positions and moves for a HER, the black player."
+	@echo "him:		Build the positions and moves for a HIM, the white player."
 
 #==============================================================================
 board:

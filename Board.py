@@ -1,9 +1,10 @@
 from enum import Enum
 from dataclasses import dataclass, replace, field
-from Config import Config
 import itertools as it
 from os import linesep as endl
 from typing import Optional, Tuple, List, Set, Dict
+import math
+from Config import Config
 
 class Player(Enum) :
     WHITE = "White"
@@ -164,8 +165,21 @@ class Board :
             out += r"\draw[thick] " + pt_units(x*s, y*s) + " rectangle " + pt_units((x+1)*s, (y+1)*s) + ";" + endl
 
         # Draw available moves
-        for move, color in zip(self.legal_moves(), self.config.colors) :
-            out += r"\draw [line width=0.6mm, " + color + ", -{Stealth[scale=1]}] " + center(move.pawn.x, move.pawn.y) + " -- " + center(move.x, move.y) + ";" + endl
+        moves = self.legal_moves()
+        assert len(moves) <= len(self.config.colors), "Need at least " + str(len(moves)) + " colors, but only " + str(len(self.config.colors)) + " are defined!"
+        for move, color in zip(moves, self.config.colors) :
+            #out += r"\draw [line width=1mm, " + color + ", -{Stealth[scale=1]}] " + center(move.pawn.x, move.pawn.y) + " -- " + center(move.x, move.y) + ";" + endl
+            #out += r"\node[single arrow, draw=blue, very thick, fill=green, minimum width = 10pt, single arrow head extend=3pt, inner xsep=0pt, fit=" + center(move.pawn.x, move.pawn.y) + " " + center(move.x, move.y) + "] {};" + endl
+            # Draw a nice thick arrow
+            dx = (move.x - move.pawn.x) * s
+            dy = (move.y - move.pawn.y) * s
+            theta = math.atan2(dy, dx)
+            mag = math.hypot(dx, dy)*0.6
+            center = ((move.pawn.x + 0.5)*s +  dx/2, (move.pawn.y + 0.5)*s + dy/2)
+                        
+            out += (r"\node[single arrow, draw=black, fill=" + color + ", inner sep=" + self.config.units(1)
+                    + ", single arrow head extend=3pt, minimum height=" +
+                    self.config.units(mag) + ", shift={" + pt_units(*center) +"}, rotate=" + str(math.degrees(theta)) + "] {};" + endl)
 
         # Draw turn number
         out += r"\draw " + pt_units(self.config.width/2, -3) + " node {Move: " + str(self.turn_num) + "};" + endl
