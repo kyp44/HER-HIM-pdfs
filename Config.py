@@ -1,10 +1,10 @@
 class Config :
     """
-    Configuration class
+    Configuration class containing various parameters.
     """
     def __init__(self) :
         """
-        Parses the config file.
+        Defines the parameters.
         """
         # Width of each board (in mm).
         self.width = 34
@@ -21,4 +21,8 @@ class Config :
         self.space_size = self.width / 3
 
     def units(self, v) :
+        """
+        Returns a string with the chosen units appended for
+        LaTeX/TikZ lengths and positions.
+        """
         return str(v) + "mm"

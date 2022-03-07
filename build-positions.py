@@ -9,7 +9,7 @@ from Games import Games
 from Board import Player
 
 # Parse command line arguments
-parser = argparse.ArgumentParser(description="Builds LaTeX source file for positions required to build a HER (default) or HIM hexapawns learning system.")
+parser = argparse.ArgumentParser(description="Builds LaTeX source file for positions required to build a HER (default) or HIM hexapawn learning machine.")
 parser.add_argument("--him", "-i", action="store_true", help="Generate LaTeX source file for HIM instead of HER.")
 args = parser.parse_args()
 

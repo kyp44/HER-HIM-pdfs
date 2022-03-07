@@ -16,6 +16,6 @@ Python 3 and a working LaTeX installation are required along with the [`anytree`
 ## Building
 
 Everything above can be built by simply running `make`, or run `make help` for information about just building individual components.
-Currently things are configured for my needs, but `Config.py` contains a configuration object with some parameters that can be adjusted to meet other user's specific needs.
+Currently things are configured for my needs, but [`Config.py`](https://github.com/kyp44/HER-HIM-pdfs/blob/master/Config.py) contains a configuration object with some parameters that can be adjusted to meet other user's specific needs.
 Namely this includes changing the board sizes (for different sized matchboxes or other containers), move colors (which will depend on what color beads one has available), and parameters relating to position boards layout on the PDF pages.
-See `Config.py` for more details on these parameters.
+See [`Config.py`](https://github.com/kyp44/HER-HIM-pdfs/blob/master/Config.py) for more details on these parameters.

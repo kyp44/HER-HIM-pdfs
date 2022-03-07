@@ -7,6 +7,9 @@ import math
 from Config import Config
 
 class Player(Enum) :
+    """
+    Represents a particular player.
+    """
     WHITE = "White"
     BLACK = "Black"
 
@@ -15,6 +18,9 @@ class Player(Enum) :
 
 @dataclass
 class Pawn :
+    """
+    Defines a pawn on the board for either player.
+    """
     player: Player
     x: int
     y: int
@@ -34,6 +40,9 @@ class Pawn :
 
 @dataclass
 class Move :
+    """
+    Represents a pawn potentially making a move.
+    """
     pawn: Pawn
     x: int
     y: int
@@ -49,6 +58,10 @@ class Board :
     turn_num: int = 1
     
     def space(self, x: int, y: int) -> Optional[Pawn] :
+        """
+        Returns whether the given space is occupied by a
+        player's pawn or not.
+        """
         for pawns in self.pawns.values() :
             space_pawns = [p for p in pawns if (p.x, p.y) == (x, y)]
             if space_pawns :
@@ -56,6 +69,10 @@ class Board :
         return None
 
     def valid_position(self, x: int, y: int) -> bool :
+        """
+        Returns whether a given space is valid
+        (i.e. is actually on the board)
+        """
         return 0 <= x <= 2 and 0 <= y <= 2
         
     def legal_moves(self) -> List[Move] :
@@ -116,7 +133,7 @@ class Board :
             if pawn.y == third_row :
                 return -self.turn
 
-        # Are all the current player's peices captured?
+        # Are all the current player's pieces captured?
         if len(self.pawns[self.turn]) == 0 :
             return -self.turn
 
@@ -168,9 +185,7 @@ class Board :
         moves = self.legal_moves()
         assert len(moves) <= len(self.config.colors), "Need at least " + str(len(moves)) + " colors, but only " + str(len(self.config.colors)) + " are defined!"
         for move, color in zip(moves, self.config.colors) :
-            #out += r"\draw [line width=1mm, " + color + ", -{Stealth[scale=1]}] " + center(move.pawn.x, move.pawn.y) + " -- " + center(move.x, move.y) + ";" + endl
-            #out += r"\node[single arrow, draw=blue, very thick, fill=green, minimum width = 10pt, single arrow head extend=3pt, inner xsep=0pt, fit=" + center(move.pawn.x, move.pawn.y) + " " + center(move.x, move.y) + "] {};" + endl
-            # Draw a nice thick arrow
+            # Draw a nice thick arrow with an outline
             dx = (move.x - move.pawn.x) * s
             dy = (move.y - move.pawn.y) * s
             theta = math.atan2(dy, dx)
